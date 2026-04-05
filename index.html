@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CountryPedia — Country Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+</head>
+<body>
+
+  <!-- AUTH MODAL -->
+  <div id="auth-overlay" class="auth-overlay active">
+    <div class="auth-modal">
+      <div class="auth-brand">
+        <h1>CountryPedia</h1>
+        <p>Your window to every nation on Earth</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Log In</button>
+        <button class="auth-tab" data-tab="register">Sign Up</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form" class="auth-form active">
+        <div class="form-group">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <button class="btn-primary" id="login-btn">Log In &rarr;</button>
+        <p class="form-switch">No account? <a href="#" data-switch="register">Sign up here</a></p>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="register-form" class="auth-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-fname">First name</label>
+            <input type="text" id="reg-fname" placeholder="Juan" />
+          </div>
+          <div class="form-group">
+            <label for="reg-lname">Last name</label>
+            <input type="text" id="reg-lname" placeholder="dela Cruz" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email address</label>
+          <input type="email" id="reg-email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Create password</label>
+          <input type="password" id="reg-password" placeholder="••••••••" />
+        </div>
+        <button class="btn-primary" id="register-btn">Create Account &rarr;</button>
+        <p class="form-switch">Already have an account? <a href="#" data-switch="login">Log in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP (hidden until login) -->
+  <div id="app" class="app hidden">
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <span class="brand-name">CountryPedia</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#" class="nav-link active" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="chatbot">Chatbot</a>
+        <a href="#" class="nav-link" data-page="about">About</a>
+      </nav>
+
+      <div class="nav-right">
+        <span id="nav-username" class="nav-user"></span>
+        <button class="btn-logout" id="logout-btn">Log Out</button>
+      </div>
+    </header>
+
+    <!-- COUNTRY SELECTOR BAR -->
+    <div class="selector-bar">
+      <div class="selector-inner">
+        <label class="selector-label">Exploring:</label>
+        <div class="custom-select-wrapper" id="country-select-wrapper">
+          <div class="custom-select-display" id="select-display">
+            <img id="select-flag" src="" alt="" class="select-flag hidden" />
+            <span id="select-text">Loading countries…</span>
+            <span class="select-arrow">▾</span>
+          </div>
+          <div class="custom-dropdown hidden" id="custom-dropdown">
+            <div class="dropdown-search-wrap">
+              <input type="text" id="dropdown-search" placeholder="Search country…" autocomplete="off" />
+            </div>
+            <ul class="dropdown-list" id="dropdown-list"></ul>
+          </div>
+        </div>
+        <div class="world-time" id="world-time">
+          <span id="time-display">--:--</span>
+          <span id="timezone-label" class="tz-label"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGES -->
+    <main class="main-content">
+
+      <!-- HOME PAGE -->
+      <section id="page-home" class="page active">
+        <div id="home-placeholder" class="home-placeholder">
+          <div class="placeholder-art">World</div>
+          <h2>Pick a country to start exploring</h2>
+          <p>Use the selector above to choose any country in the world.</p>
+        </div>
+        <div id="country-card" class="country-card hidden"></div>
+      </section>
+
+      <!-- CHATBOT PAGE -->
+      <section id="page-chatbot" class="page hidden">
+        <div class="chatbot-wrap">
+          <div class="chatbot-header">
+            <div class="chatbot-avatar">AI</div>
+            <div>
+              <h2>Country Chatbot</h2>
+              <p id="chatbot-subtitle">Powered by Gemini · Ask me anything about countries!</p>
+            </div>
+          </div>
+          <div class="chat-suggestion-bar" id="chat-suggestion-bar"></div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-bubble bot">
+              <span class="bubble-avatar">AI</span>
+              <div class="bubble-content">Hello! Select a country and ask me anything about it. I'm here to help!</div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <textarea id="chat-input" placeholder="Ask something about the selected country…" rows="1"></textarea>
+            <button id="chat-send" class="chat-send-btn">Send</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT PAGE -->
+      <section id="page-about" class="page hidden">
+        <div class="about-wrap">
+          <div class="about-hero">
+            <h1>About CountryPedia</h1>
+            <!-- <p class="about-tagline">A student project built to explore the world through data.</p> -->
+          </div>
+
+          <div class="about-grid">
+            <div class="about-card">
+              <div class="about-icon">Edu</div>
+              <h3>What is this?</h3>
+              <p>CountryPedia is a web application built as a school project to practice frontend development, API integration, and UI design principles. It fetches live data from public APIs to show detailed information about every country in the world.</p>
+            </div>
+            <div class="about-card">
+              <div class="about-icon">How</div>
+              <h3>How it works</h3>
+              <p>The app uses the <strong>REST Countries API</strong> to fetch country data, the <strong>Time.now API</strong> for real-time world clocks, and <strong>Google Gemini</strong> as the AI chatbot engine. All data is fetched live using <code>fetch()</code> with <code>async/await</code>.</p>
+            </div>
+            <div class="about-card">
+              <div class="about-icon">Dev</div>
+              <h3>Tech used</h3>
+              <ul class="tech-list">
+                <li>Vanilla HTML, CSS, JavaScript</li>
+                <li>REST Countries API v3.1</li>
+                <li>Time.now World Time API</li>
+                <li>Google Gemini 2.5 Flash Lite</li>
+                <li>Google Fonts (Syne + DM Sans)</li>
+              </ul>
+            </div>
+            <!-- <div class="about-card">
+              <div class="about-icon">UX</div>
+              <h3>Design goals</h3>
+              <p>The design follows a clean, student-made aesthetic — intentionally avoiding generic AI-generated looks. Responsive layout, semantic HTML, accessible forms, and proper client-server communication patterns are all implemented.</p>
+            </div> -->
+            <!-- <div class="about-card">
+              <div class="about-icon">Feat</div>
+              <h3>Features</h3>
+              <ul class="tech-list">
+                <li>Country explorer with live data</li>
+                <li>Real-time world clock per country</li>
+                <li>AI-powered country chatbot</li>
+                <li>Searchable country dropdown</li>
+                <li>Auto-detect your location</li>
+                <li>Dummy login/register system</li>
+              </ul>
+            </div> -->
+            <!-- <div class="about-card">
+              <div class="about-icon">Who</div>
+              <h3>Developer</h3>
+              <p>Built with care by a student learning web development. This project demonstrates the use of fetch APIs, async programming, DOM manipulation, responsive design, and event-driven architecture.</p>
+              <p class="version-tag">Version 1.0 · 2025</p>
+            </div> -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/countries.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
